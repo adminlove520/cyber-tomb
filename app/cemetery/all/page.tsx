@@ -6,7 +6,15 @@ import { ChevronLeft, Skull } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export default async function AllCemeteryPage() {
-  const { data: tombs, error } = await dataService.getTombs().catch(e => ({ data: null, error: e }));
+  let tombs: any[] | null = null;
+  let error: any = null;
+
+  try {
+    const result = await dataService.getTombs();
+    tombs = result.data;
+  } catch (e: any) {
+    error = e;
+  }
 
   if (error) {
     return <div className="text-red-500">无法连接到墓地数据库: {error.message}</div>;

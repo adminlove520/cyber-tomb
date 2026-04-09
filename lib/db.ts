@@ -1,7 +1,10 @@
 import { createClient as createSupabaseClient } from '@supabase/supabase-js';
 import { createClient as createLibsqlClient } from '@libsql/client';
 
-const DATABASE_TYPE = process.env.DATABASE_TYPE === 'supabase' ? 'supabase' : 'sqlite';
+const DATABASE_TYPE = (
+  process.env.DATABASE_TYPE === 'supabase' || 
+  (process.env.VERCEL && process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder'))
+) ? 'supabase' : 'sqlite';
 
 // Supabase Configuration
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co';

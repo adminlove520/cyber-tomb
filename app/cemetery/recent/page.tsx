@@ -6,7 +6,15 @@ import { ChevronLeft } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export default async function RecentCemeteryPage() {
-  const { data: tombs, error } = await dataService.getTombs(10, 0, 'recent').catch(e => ({ data: null, error: e }));
+  let tombs: any[] | null = null;
+  let error: any = null;
+
+  try {
+    const result = await dataService.getTombs(10, 0, 'recent');
+    tombs = result.data;
+  } catch (e: any) {
+    error = e;
+  }
 
   if (error) {
     return <div className="text-red-500">无法连接到墓地数据库: {error.message}</div>;
