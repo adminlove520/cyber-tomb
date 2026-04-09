@@ -1,0 +1,298 @@
+"use client";
+
+import { useState, useEffect, useCallback, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { cn } from "@/lib/utils";
+import { supabase } from "@/lib/supabase";
+import { getMeritTextsAction } from "@/lib/actions";
+import { Sparkles, Volume2, Music, Settings2, Palette, Info } from "lucide-react";
+
+interface MeritEvent {
+  id: number;
+  text: string;
+}
+
+type Theme = 'cyber' | 'zen' | 'classic';
+
+export default function WoodenFish() {
+  const [meritCount, setMeritCount] = useState(0);
+  const [globalMerits, setGlobalMerits] = useState<number | null>(null);
+  const [events, setEvents] = useState<MeritEvent[]>([]);
+  const [isKnocking, setIsKnocking] = useState(false);
+  const [meritTexts, setMeritTexts] = useState(["功德 +1", "Debug 成功", "内存释放", "逻辑通顺", "代码优雅", "Bug 消失"]);
+  const [soundId, setSoundId] = useState<"1" | "2">("1");
+  const [bgmEnabled, setBgmEnabled] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [theme, setTheme] = useState<Theme>('cyber');
+
+  const lastUpdateRef = useRef<number>(0);
+  const knockAudioRef = useRef<HTMLAudioElement | null>(null);
+  const bgmAudioRef = useRef<HTMLAudioElement | null>(null);
+
+  // Initialize sounds and fetch data
+  useEffect(() => {
+    const savedCount = localStorage.getItem("merit_count");
+    if (savedCount) setMeritCount(parseInt(savedCount, 10));
+
+    const savedSound = localStorage.getItem("wooden_fish_sound") as "1" | "2";
+    if (savedSound) setSoundId(savedSound);
+    
+    const savedTheme = localStorage.getItem("cyber_tomb_theme") as Theme;
+    if (savedTheme) setTheme(savedTheme);
+
+    // Initialize Knock Audio
+    knockAudioRef.current = new Audio(`/sounds/sound_${soundId}.mp3`);
+    knockAudioRef.current.volume = 0.5;
+
+    // Initialize BGM
+    bgmAudioRef.current = new Audio("/sounds/bgm.mp3");
+    bgmAudioRef.current.loop = true;
+    bgmAudioRef.current.volume = 0.4;
+
+    const fetchMeritTexts = async () => {
+      try {
+        const texts = await getMeritTextsAction();
+        if (texts && texts.length > 0) setMeritTexts(texts);
+      } catch (e) {
+        console.warn("AI texts failed, using defaults", e);
+      }
+    };
+    fetchMeritTexts();
+
+    const fetchStats = async () => {
+      const { data, error } = await supabase.from("global_stats").select("value").eq("key", "total_merits").single();
+      if (!error && data) setGlobalMerits(Number(data.value));
+    };
+    fetchStats();
+
+    const channel = supabase
+      .channel("global-stats")
+      .on("postgres_changes", { event: "UPDATE", schema: "public", table: "global_stats", filter: "key=eq.total_merits" }, (payload) => {
+        setGlobalMerits(Number(payload.new.value));
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+      bgmAudioRef.current?.pause();
+    };
+  }, []);
+
+  // Update knock audio when soundId changes
+  useEffect(() => {
+    if (knockAudioRef.current) {
+      knockAudioRef.current.src = `/sounds/sound_${soundId}.mp3`;
+      localStorage.setItem("wooden_fish_sound", soundId);
+    }
+  }, [soundId]);
+  
+  // Update theme in localStorage
+  useEffect(() => {
+    localStorage.setItem("cyber_tomb_theme", theme);
+  }, [theme]);
+
+  // Handle BGM playback
+  useEffect(() => {
+    if (bgmEnabled) {
+      bgmAudioRef.current?.play().catch(() => {
+        console.warn("BGM auto-play blocked by browser. User interaction required.");
+        setBgmEnabled(false);
+      });
+    } else {
+      bgmAudioRef.current?.pause();
+    }
+  }, [bgmEnabled]);
+
+  const knock = useCallback(async () => {
+    setIsKnocking(true);
+    const newCount = meritCount + 1;
+    setMeritCount(newCount);
+    localStorage.setItem("merit_count", newCount.toString());
+
+    if (Date.now() - lastUpdateRef.current > 2000) {
+      lastUpdateRef.current = Date.now();
+      await supabase.rpc("increment_merit", { increment: 1 });
+    }
+
+    if (knockAudioRef.current) {
+      knockAudioRef.current.currentTime = 0;
+      knockAudioRef.current.play().catch(e => console.warn("Sound play failed", e));
+    }
+
+    if (typeof navigator !== "undefined" && navigator.vibrate) navigator.vibrate(40);
+
+    const id = Date.now();
+    const randomText = meritTexts[Math.floor(Math.random() * meritTexts.length)];
+    setEvents(prev => [...prev, { id, text: randomText }]);
+    setTimeout(() => setEvents(prev => prev.filter(e => e.id !== id)), 1000);
+    setTimeout(() => setIsKnocking(false), 100);
+  }, [meritCount, meritTexts, soundId]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.code === "Space") {
+        e.preventDefault();
+        knock();
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [knock]);
+
+  return (
+    <div className={cn(
+      "flex flex-col items-center gap-8 select-none relative w-full max-w-xl transition-colors duration-1000 p-8 rounded-[4rem]",
+      theme === 'cyber' && "bg-black/40 border border-blue-500/20 shadow-[0_0_50px_rgba(59,130,246,0.1)]",
+      theme === 'zen' && "bg-stone-100/10 border border-stone-400/20",
+      theme === 'classic' && "bg-amber-950/20 border border-amber-600/20 shadow-2xl"
+    )}>
+      {/* Merit Display */}
+      <div className="flex flex-col items-center gap-2">
+        <h2 className={cn(
+          "text-5xl font-black italic tracking-tighter transition-all",
+          theme === 'cyber' && "text-blue-500 drop-shadow-[0_0_10px_rgba(59,130,246,0.5)]",
+          theme === 'zen' && "text-stone-400 font-serif",
+          theme === 'classic' && "text-amber-500"
+        )}>
+          个人功德: {meritCount.toLocaleString()}
+        </h2>
+        {globalMerits !== null && (
+          <div className="text-sm font-mono text-zinc-600 uppercase tracking-widest flex items-center gap-2">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
+            全服累计功德: <span className="text-zinc-400">{globalMerits.toLocaleString()}</span>
+          </div>
+        )}
+      </div>
+
+      <div className="relative group cursor-pointer" onClick={knock}>
+        <AnimatePresence>
+          {events.map((event) => (
+            <motion.div
+              key={event.id}
+              initial={{ opacity: 1, y: 0, scale: 0.5 }}
+              animate={{ opacity: 0, y: -200, scale: 2 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1.2, ease: "easeOut" }}
+              className={cn(
+                "absolute top-0 left-1/2 -translate-x-1/2 text-2xl font-black whitespace-nowrap pointer-events-none drop-shadow-xl z-50",
+                theme === 'cyber' && "text-blue-400 font-mono",
+                theme === 'zen' && "text-stone-300 font-serif",
+                theme === 'classic' && "text-yellow-500 font-bold"
+              )}
+            >
+              {event.text}
+            </motion.div>
+          ))}
+        </AnimatePresence>
+
+        <motion.div
+          animate={isKnocking ? { scale: 0.85, rotate: -5 } : { scale: 1, rotate: 0 }}
+          transition={{ type: "spring", stiffness: 600, damping: 10 }}
+          className={cn(
+            "w-80 h-80 rounded-[5rem] flex items-center justify-center border-4 transition-all overflow-hidden relative shadow-2xl",
+            theme === 'cyber' && "bg-gradient-to-br from-zinc-900 via-black to-zinc-900 border-zinc-800 shadow-blue-500/10",
+            theme === 'zen' && "bg-white/5 border-stone-800",
+            theme === 'classic' && "bg-gradient-to-tr from-amber-950 to-amber-900 border-amber-800"
+          )}
+        >
+          {/* Subtle Glow Layer */}
+          <div className={cn(
+            "absolute inset-0 opacity-20",
+            theme === 'cyber' && "bg-[radial-gradient(circle_at_center,_var(--tw-gradient-from)_0%,_transparent_70%)] from-blue-500"
+          )} />
+          
+          <img 
+            src="/images/wooden-fish.svg" 
+            alt="Wooden Fish" 
+            className={cn(
+              "w-60 h-60 pointer-events-none transition-all group-hover:scale-110",
+              theme === 'cyber' && "filter brightness-50 sepia(100%) hue-rotate(180deg) saturate(300%) opacity-70",
+              theme === 'zen' && "filter grayscale brightness-50 opacity-40",
+              theme === 'classic' && "filter brightness-75 sepia(100%) hue-rotate(0deg) saturate(200%)"
+            )}
+          />
+        </motion.div>
+
+        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] text-zinc-600 font-black uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-all duration-500">
+          点击敲击 · Tap to Vibrate
+        </div>
+      </div>
+
+      {/* Controls */}
+      <div className="flex flex-col items-center gap-4 mt-12 w-full">
+        <div className="flex items-center gap-2 bg-zinc-950/80 p-1 rounded-full border border-zinc-800/50 backdrop-blur-xl">
+          <button 
+            onClick={() => setBgmEnabled(!bgmEnabled)}
+            className={cn(
+              "flex items-center gap-2 px-6 py-3 rounded-full transition-all text-xs font-black uppercase tracking-widest",
+              bgmEnabled 
+                ? "bg-blue-600 text-white shadow-[0_0_20px_rgba(37,99,235,0.4)]" 
+                : "text-zinc-500 hover:text-zinc-300"
+            )}
+          >
+            <Music className={cn("w-4 h-4", bgmEnabled && "animate-spin")} />
+            {bgmEnabled ? "播放中 · 大悲咒" : "伴奏 · 大悲咒"}
+          </button>
+          
+          <div className="w-[1px] h-6 bg-zinc-800"></div>
+          
+          <button 
+            onClick={() => setSoundId(soundId === "1" ? "2" : "1")}
+            className="flex items-center gap-2 px-6 py-3 rounded-full text-zinc-500 hover:text-zinc-300 hover:bg-zinc-900 transition-all text-xs font-black uppercase tracking-widest"
+          >
+            <Volume2 className="w-4 h-4" />
+            {soundId === "1" ? "木鱼声" : "钟鸣声"}
+          </button>
+
+          <div className="w-[1px] h-6 bg-zinc-800"></div>
+
+          <button 
+            onClick={() => setShowSettings(!showSettings)}
+            className={cn(
+              "p-3 rounded-full transition-all",
+              showSettings ? "bg-zinc-800 text-blue-400" : "text-zinc-500 hover:text-zinc-300"
+            )}
+          >
+            <Settings2 className="w-4 h-4" />
+          </button>
+        </div>
+
+        {/* Theme Switcher */}
+        {showSettings && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex items-center gap-3 p-2 bg-zinc-950/80 rounded-2xl border border-zinc-800/50 backdrop-blur-xl"
+          >
+            <Palette className="w-4 h-4 text-zinc-600 ml-2" />
+            {(['cyber', 'zen', 'classic'] as Theme[]).map((t) => (
+              <button
+                key={t}
+                onClick={() => setTheme(t)}
+                className={cn(
+                  "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all",
+                  theme === t ? "bg-zinc-800 text-zinc-100" : "text-zinc-600 hover:text-zinc-400"
+                )}
+              >
+                {t}
+              </button>
+            ))}
+          </motion.div>
+        )}
+      </div>
+      
+      {meritCount >= 999 && (
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="mt-4 p-4 rounded-3xl bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs flex items-center gap-3"
+        >
+          <Sparkles className="w-4 h-4 animate-pulse" />
+          <span className="font-black uppercase tracking-widest flex items-center gap-2">
+            功德圆满: <span className="text-zinc-100 italic">已解锁 AI 深度超度权限</span>
+          </span>
+        </motion.div>
+      )}
+    </div>
+  );
+}
