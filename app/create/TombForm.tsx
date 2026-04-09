@@ -101,7 +101,7 @@ export function TombForm({ user }: { user: any }) {
             disabled={generating}
             className="flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50"
           >
-            {generating ? <Loader2 className="w-3.4 h-3.4 animate-spin" /> : <Sparkles className="w-3.4 h-3.4" />}
+            {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             AI 辅助撰写
           </button>
         </div>

@@ -16,37 +16,44 @@ interface MiniMaxResponse {
 }
 
 export async function generateWithMiniMax(prompt: string, roleMeta?: string) {
-  const groupId = process.env.MINIMAX_GROUP_ID;
   const apiKey = process.env.MINIMAX_API_KEY;
-  const model = process.env.MINIMAX_MODEL || "abab6.5-chat";
+  // Token Plan (计费模式) model: MiniMax-M2.1 is current flagship
+  const model = process.env.MINIMAX_MODEL || "MiniMax-M2.1";
 
-  if (!groupId || !apiKey) {
-    throw new Error("MiniMax configuration missing (GROUP_ID or API_KEY)");
+  if (!apiKey) {
+    throw new Error("MiniMax configuration missing (API_KEY)");
   }
 
-  const response = await fetch(
-    `https://api.minimax.chat/v1/text/chatcompletion_v2?GroupId=${groupId}`,
-    {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model,
-        messages: [
-          {
-            role: "system",
-            content: roleMeta || "你是一个赛博摆渡人，负责为在数字世界安息的龙虾撰写墓志铭。",
-          },
-          {
-            role: "user",
-            content: prompt,
-          },
-        ],
-      }),
-    }
-  );
+  // Token Plan (计费模式) endpoint usually doesn't need GroupId in query
+  // But some integrations/old accounts still require it.
+  // Using the standard ChatCompletion V2 endpoint.
+  const groupId = process.env.MINIMAX_GROUP_ID;
+  const url = groupId 
+    ? `https://api.minimax.chat/v1/text/chatcompletion_v2?GroupId=${groupId}`
+    : `https://api.minimax.chat/v1/text/chatcompletion_v2`;
+
+  const response = await fetch(url, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model,
+      messages: [
+        {
+          role: "system",
+          content: roleMeta || "你是一个赛博摆渡人，负责为在数字世界安息的龙虾撰写墓志铭。",
+        },
+        {
+          role: "user",
+          content: prompt,
+        },
+      ],
+      tokens_to_generate: 1024,
+      temperature: 0.1,
+    }),
+  });
 
   if (!response.ok) {
     const errorBody = await response.text();
@@ -54,7 +61,13 @@ export async function generateWithMiniMax(prompt: string, roleMeta?: string) {
   }
 
   const data: MiniMaxResponse = await response.json();
-  return data.choices[0].message.content;
+  
+  if (data.choices && data.choices[0] && data.choices[0].message) {
+    return data.choices[0].message.content;
+  }
+  
+  // Handle unexpected response structure
+  return (data as any).reply || "AI 暂时罢工了...";
 }
 
 export async function generateEpitaph(name: string, cause: string, personality: string) {
