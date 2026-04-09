@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { dataService } from '@/lib/data-service';
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
@@ -7,19 +7,16 @@ export async function GET(req: Request) {
   const offset = parseInt(searchParams.get('offset') || '0');
   const sort = searchParams.get('sort') || 'recent';
 
-  const query = supabase.from("tombs").select("*", { count: 'exact' });
+  try {
+    const { data, count, hasMore } = await dataService.getTombs(limit, offset, sort);
 
-  if (sort === 'recent') query.order('created_at', { ascending: false });
-  else if (sort === 'incense') query.order('incense_count', { ascending: false });
-
-  const { data, count, error } = await query.range(offset, offset + limit - 1);
-
-  if (error) return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
-
-  return NextResponse.json({
-    ok: true,
-    tombs: data,
-    total: count,
-    hasMore: (count || 0) > (offset + limit)
-  });
+    return NextResponse.json({
+      ok: true,
+      tombs: data,
+      total: count,
+      hasMore
+    });
+  } catch (error: any) {
+    return NextResponse.json({ ok: false, error: error.message }, { status: 500 });
+  }
 }

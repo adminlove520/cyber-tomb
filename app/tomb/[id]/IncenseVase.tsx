@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { supabase } from "@/lib/supabase";
+import { addIncenseAction } from "@/lib/actions";
 import { Loader2, Flame, Send } from "lucide-react";
 
 export function IncenseVase({ tombId, initialCount, user }: { tombId: string, initialCount: number, user?: any }) {
@@ -24,19 +24,14 @@ export function IncenseVase({ tombId, initialCount, user }: { tombId: string, in
     setTimeout(() => setActiveParticles(prev => prev.filter(p => p !== pid)), 4000);
 
     try {
-      const { error } = await supabase.from("incense_logs").insert({
-        tomb_id: tombId,
-        visitor_gh_user: user?.username || null,
+      await addIncenseAction(tombId, {
+        visitor_gh_user: user?.username || user?.name || null,
         message: message || "献上一炷清香，愿逻辑永远通顺。",
         count: 1
       });
-
-      if (!error) {
-        await supabase.rpc('increment_tomb_incense', { tomb_id: tombId });
-        setCount(prev => prev + 1);
-        setIncenseLevel(prev => (prev + 1) % 10);
-        setMessage("");
-      }
+      setCount(prev => prev + 1);
+      setIncenseLevel(prev => (prev + 1) % 10);
+      setMessage("");
     } catch (e) {
       console.error(e);
     } finally {

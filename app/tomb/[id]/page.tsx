@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { dataService } from "@/lib/data-service";
 import { auth } from "@/auth";
 import Link from "next/link";
 import { ChevronLeft, Share2, Heart, Coins, Ghost } from "lucide-react";
@@ -13,27 +13,13 @@ export default async function TombDetailPage({ params }: { params: Promise<{ id:
   const { id } = await params;
   const session = await auth();
 
-  const { data: tomb, error } = await supabase
-    .from("tombs")
-    .select("*")
-    .eq("id", id)
-    .single();
+  const tomb = await dataService.getTombById(id).catch(() => null);
 
-  if (error || !tomb) {
+  if (!tomb) {
     notFound();
   }
 
-  const { data: incenseLogs } = await supabase
-    .from("incense_logs")
-    .select("*")
-    .eq("tomb_id", id)
-    .order("created_at", { ascending: false });
-
-  const { data: giftLogs } = await supabase
-    .from("gift_logs")
-    .select("*")
-    .eq("tomb_id", id)
-    .order("created_at", { ascending: false });
+  const { incenseLogs, giftLogs } = await dataService.getLogs(id);
 
   return (
     <div className="w-full max-w-5xl px-4 py-12">

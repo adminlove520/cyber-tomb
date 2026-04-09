@@ -4,8 +4,8 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
-import { getMeritTextsAction } from "@/lib/actions";
-import { Sparkles, Volume2, Music, Settings2, Palette, Info } from "lucide-react";
+import { getMeritTextsAction, incrementMeritAction, getGlobalStatsAction } from "@/lib/actions";
+import { Sparkles, Volume2, Music, Settings2, Palette } from "lucide-react";
 
 interface MeritEvent {
   id: number;
@@ -60,11 +60,22 @@ export default function WoodenFish() {
     fetchMeritTexts();
 
     const fetchStats = async () => {
-      const { data, error } = await supabase.from("global_stats").select("value").eq("key", "total_merits").single();
-      if (!error && data) setGlobalMerits(Number(data.value));
+      try {
+        const stats = await getGlobalStatsAction();
+        if (stats && stats.total_merits !== undefined) {
+          setGlobalMerits(Number(stats.total_merits));
+        }
+      } catch (e) {
+        console.warn("Fetch stats failed", e);
+      }
     };
+    
     fetchStats();
-
+    
+    // Fallback polling for local SQLite (Realtime is Supabase-only)
+    const pollInterval = setInterval(fetchStats, 5000);
+    
+    // Supabase Realtime (if configured)
     const channel = supabase
       .channel("global-stats")
       .on("postgres_changes", { event: "UPDATE", schema: "public", table: "global_stats", filter: "key=eq.total_merits" }, (payload) => {
@@ -74,6 +85,7 @@ export default function WoodenFish() {
 
     return () => {
       supabase.removeChannel(channel);
+      clearInterval(pollInterval);
       bgmAudioRef.current?.pause();
     };
   }, []);
@@ -111,7 +123,7 @@ export default function WoodenFish() {
 
     if (Date.now() - lastUpdateRef.current > 2000) {
       lastUpdateRef.current = Date.now();
-      await supabase.rpc("increment_merit", { increment: 1 });
+      await incrementMeritAction(1);
     }
 
     if (knockAudioRef.current) {

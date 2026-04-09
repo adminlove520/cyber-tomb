@@ -1,4 +1,4 @@
-import { supabase } from "@/lib/supabase";
+import { dataService } from "@/lib/data-service";
 import { TombCard } from "@/components/TombCard";
 import Link from "next/link";
 import { ChevronLeft } from "lucide-react";
@@ -6,11 +6,7 @@ import { ChevronLeft } from "lucide-react";
 export const dynamic = "force-dynamic";
 
 export default async function RecentCemeteryPage() {
-  const { data: tombs, error } = await supabase
-    .from("tombs")
-    .select("*")
-    .order("created_at", { ascending: false })
-    .limit(10);
+  const { data: tombs, error } = await dataService.getTombs(10, 0, 'recent').catch(e => ({ data: null, error: e }));
 
   if (error) {
     return <div className="text-red-500">无法连接到墓地数据库: {error.message}</div>;

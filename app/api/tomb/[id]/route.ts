@@ -1,14 +1,14 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { dataService } from '@/lib/data-service';
 
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   const { id } = await params;
-  const { data, error } = await supabase.from("tombs").select("*").eq("id", id).single();
+  const data = await dataService.getTombById(id);
 
-  if (error || !data) return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
+  if (!data) return NextResponse.json({ ok: false, error: "not_found" }, { status: 404 });
 
   return NextResponse.json({
     ok: true,

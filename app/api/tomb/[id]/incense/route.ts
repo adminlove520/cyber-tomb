@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { supabase } from '@/lib/supabase';
+import { dataService } from '@/lib/data-service';
 
 export async function POST(
   req: Request,
@@ -8,28 +8,22 @@ export async function POST(
   try {
     const { id } = await params;
     const body = await req.json();
-    const { count = 1, message } = body;
+    const { count = 1, message, visitor_gh_user } = body;
 
-    // Call stored procedure to increment incense count
-    const { error: rpcError } = await supabase.rpc('increment_tomb_incense', { tomb_id: id });
-    if (rpcError) return NextResponse.json({ ok: false, error: rpcError.message }, { status: 500 });
-
-    // Log the incense entry
-    const { error: logError } = await supabase.from('incense_logs').insert({
-      tomb_id: id,
+    await dataService.addIncense(id, {
+      visitor_gh_user: visitor_gh_user || "Anonymous",
       message: message || "一路走好",
       count
     });
 
-    // Get updated count
-    const { data: tomb } = await supabase.from('tombs').select('incense_count').eq('id', id).single();
+    const tomb = await dataService.getTombById(id);
 
     return NextResponse.json({
       ok: true,
       totalIncense: tomb?.incense_count || 0,
       meritEarned: count
     });
-  } catch (err) {
-    return NextResponse.json({ ok: false, error: "invalid_request" }, { status: 400 });
+  } catch (err: any) {
+    return NextResponse.json({ ok: false, error: err.message || "invalid_request" }, { status: 400 });
   }
 }

@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/lib/supabase";
-import { Coins, Loader2, Wallet, CheckCircle2, ArrowRightLeft, ShieldCheck } from "lucide-react";
+import { addGiftAction } from "@/lib/actions";
+import { Coins, Loader2, Wallet, CheckCircle, ArrowRightLeft, ShieldCheck } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 
@@ -33,19 +33,15 @@ export function GiftBox({ tombId, initialTotal, user }: { tombId: string, initia
     await new Promise(r => setTimeout(r, 1500)); 
     
     try {
-      const { error } = await supabase.from("gift_logs").insert({
-        tomb_id: tombId,
-        from_gh_user: user?.username || "Anonymous",
+      await addGiftAction(tombId, {
+        from_gh_user: user?.username || user?.name || "Anonymous",
         amount: selectedPkg.amount,
         gift_type: selectedPkg.name
       });
 
-      if (!error) {
-        await supabase.rpc('increment_tomb_gift', { tomb_id: tombId, gift_amount: selectedPkg.amount });
-        setTotal(prev => prev + selectedPkg.amount);
-        setStep('success');
-        setTimeout(() => setStep('select'), 3000);
-      }
+      setTotal(prev => prev + selectedPkg.amount);
+      setStep('success');
+      setTimeout(() => setStep('select'), 3000);
     } catch (e) {
       console.error(e);
       setStep('select');
@@ -173,7 +169,7 @@ export function GiftBox({ tombId, initialTotal, user }: { tombId: string, initia
             className="flex flex-col items-center justify-center py-10 space-y-6 text-center"
           >
             <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center">
-              <CheckCircle2 className="w-10 h-10 text-green-400" />
+              <CheckCircle className="w-10 h-10 text-green-400" />
             </div>
             <div className="space-y-2">
               <h4 className="text-lg font-black text-white">支付成功!</h4>

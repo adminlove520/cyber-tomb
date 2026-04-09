@@ -1,15 +1,12 @@
-import { supabase } from "@/lib/supabase";
+import { dataService } from "@/lib/data-service";
 import { TombCard } from "@/components/TombCard";
 import Link from "next/link";
-import { ChevronLeft } from "lucide-react";
+import { ChevronLeft, Skull } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
 export default async function AllCemeteryPage() {
-  const { data: tombs, error } = await supabase
-    .from("tombs")
-    .select("*")
-    .order("created_at", { ascending: false });
+  const { data: tombs, error } = await dataService.getTombs().catch(e => ({ data: null, error: e }));
 
   if (error) {
     return <div className="text-red-500">无法连接到墓地数据库: {error.message}</div>;
