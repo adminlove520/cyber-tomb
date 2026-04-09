@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { supabase } from "@/lib/supabase";
 import { getMeritTextsAction, incrementMeritAction, getGlobalStatsAction } from "@/lib/actions";
+import { Sparkles, Volume2, Music, Settings2, Palette } from "lucide-react";
 import { useTheme } from "./ThemeContext";
 import { THEMES, Theme } from "@/lib/theme";
 
@@ -262,16 +263,16 @@ export default function WoodenFish() {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 p-2 bg-zinc-950/80 rounded-2xl border border-zinc-800/50 backdrop-blur-xl"
+            className="flex items-center gap-3 p-2 bg-themed-card rounded-2xl border border-themed-border backdrop-blur-xl"
           >
-            <Palette className="w-4 h-4 text-zinc-600 ml-2" />
+            <Palette className="w-4 h-4 text-themed-dim ml-2" />
             {THEMES.map((t) => (
               <button
                 key={t.id}
                 onClick={() => setTheme(t.id)}
                 className={cn(
                   "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
-                  theme === t.id ? "bg-zinc-800 text-zinc-100" : "text-zinc-600 hover:text-zinc-400"
+                  theme === t.id ? "bg-primary text-background" : "text-themed-dim hover:text-themed-primary"
                 )}
               >
                 <span>{t.icon}</span>

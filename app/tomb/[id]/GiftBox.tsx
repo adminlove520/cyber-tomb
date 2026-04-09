@@ -49,20 +49,20 @@ export function GiftBox({ tombId, initialTotal, user }: { tombId: string, initia
   };
 
   return (
-    <div className="p-8 rounded-[3rem] bg-zinc-900 border-2 border-zinc-800 shadow-2xl relative overflow-hidden group">
+    <div className="p-8 rounded-[3rem] card-themed shadow-2xl relative overflow-hidden group">
       {/* Background Glow */}
-      <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/10 blur-[60px] pointer-events-none group-hover:bg-blue-500/20 transition-all duration-700" />
+      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 blur-[60px] pointer-events-none group-hover:bg-primary/20 transition-all duration-700" />
       
       <div className="flex justify-between items-center mb-8">
         <div className="flex items-center gap-3">
-          <div className="p-2 bg-blue-500/10 rounded-xl">
-            <Coins className="w-5 h-5 text-blue-400" />
+          <div className="p-2 bg-primary/10 rounded-xl">
+            <Coins className="w-5 h-5 text-themed-primary" />
           </div>
-          <h3 className="text-xl font-black italic tracking-tighter text-zinc-100">x402 随礼</h3>
+          <h3 className="text-xl font-black italic tracking-tighter text-themed-primary">x402 随礼</h3>
         </div>
         <div className="flex flex-col items-end">
-          <span className="text-[10px] text-zinc-500 font-mono uppercase tracking-widest">Total Honor</span>
-          <span className="font-mono text-blue-400 font-black text-lg">
+          <span className="text-[10px] text-themed-dim font-mono uppercase tracking-widest">Total Honor</span>
+          <span className="font-mono text-themed-accent font-black text-lg">
             ${total.toFixed(2)}
           </span>
         </div>
@@ -81,11 +81,11 @@ export function GiftBox({ tombId, initialTotal, user }: { tombId: string, initia
               <button
                 key={pkg.id}
                 onClick={() => startPayment(pkg)}
-                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-zinc-950 border border-zinc-800/50 hover:border-blue-500/50 hover:bg-zinc-800/50 transition-all group/btn active:scale-95"
+                className="flex flex-col items-center justify-center p-4 rounded-2xl bg-themed-card border border-themed-border hover:border-themed-primary/50 transition-all group/btn active:scale-95"
               >
                 <span className="text-2xl mb-2 group-hover/btn:scale-125 transition-transform">{pkg.icon}</span>
-                <span className="text-xs font-bold text-zinc-300 group-hover/btn:text-zinc-100">{pkg.name}</span>
-                <span className="text-[10px] text-zinc-500 font-mono mt-1">${pkg.amount}</span>
+                <span className="text-xs font-bold text-themed-dim group-hover/btn:text-themed-primary">{pkg.name}</span>
+                <span className="text-[10px] text-themed-dim/60 font-mono mt-1">${pkg.amount}</span>
               </button>
             ))}
           </motion.div>
@@ -99,24 +99,24 @@ export function GiftBox({ tombId, initialTotal, user }: { tombId: string, initia
             exit={{ opacity: 0, x: -20 }}
             className="space-y-6"
           >
-            <div className="p-6 rounded-3xl bg-zinc-950 border border-zinc-800 space-y-4">
-              <div className="flex items-center justify-between text-xs text-zinc-500 font-mono">
+            <div className="p-6 rounded-3xl bg-themed-card border border-themed-border space-y-4">
+              <div className="flex items-center justify-between text-xs text-themed-dim font-mono">
                 <span>Transaction</span>
-                <span className="text-zinc-400 font-bold uppercase tracking-widest">Insecure-Handshake</span>
+                <span className="text-themed-dim font-bold uppercase tracking-widest">Insecure-Handshake</span>
               </div>
               <div className="flex items-center gap-4 py-2">
-                <div className="w-12 h-12 rounded-2xl bg-blue-500/20 flex items-center justify-center text-2xl">
+                <div className="w-12 h-12 rounded-2xl bg-primary/20 flex items-center justify-center text-2xl">
                   {selectedPkg.icon}
                 </div>
                 <div className="flex-1">
-                  <h4 className="text-sm font-bold text-zinc-100">{selectedPkg.name}</h4>
-                  <p className="text-[10px] text-zinc-500 font-mono italic">Lobster Respect Pack</p>
+                  <h4 className="text-sm font-bold text-themed-primary">{selectedPkg.name}</h4>
+                  <p className="text-[10px] text-themed-dim font-mono italic">Lobster Respect Pack</p>
                 </div>
                 <div className="text-right">
-                  <span className="text-blue-400 font-black text-lg font-mono">${selectedPkg.amount}</span>
+                  <span className="text-themed-accent font-black text-lg font-mono">${selectedPkg.amount}</span>
                 </div>
               </div>
-              <div className="pt-4 border-t border-zinc-900 flex items-center gap-2 text-[10px] text-zinc-500">
+              <div className="pt-4 border-t border-themed-border flex items-center gap-2 text-[10px] text-themed-dim">
                 <ShieldCheck className="w-3 h-3 text-green-500" />
                 x402 Protocol: Secure Peer Validation Active
               </div>
@@ -125,13 +125,13 @@ export function GiftBox({ tombId, initialTotal, user }: { tombId: string, initia
             <div className="grid grid-cols-2 gap-3">
               <button 
                 onClick={() => setStep('select')}
-                className="py-4 rounded-2xl bg-zinc-800 text-zinc-400 text-xs font-bold hover:bg-zinc-700 transition-all"
+                className="btn-secondary-themed text-xs py-3"
               >
                 取消 (Abort)
               </button>
               <button 
                 onClick={handlePay}
-                className="py-4 rounded-2xl bg-blue-600 text-white text-xs font-bold hover:bg-blue-500 transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center gap-2"
+                className="btn-primary-themed text-xs py-3"
               >
                 确认支付 (Execute)
               </button>
@@ -147,12 +147,12 @@ export function GiftBox({ tombId, initialTotal, user }: { tombId: string, initia
             className="flex flex-col items-center justify-center py-12 space-y-6 text-center"
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full animate-pulse" />
-              <ArrowRightLeft className="w-12 h-12 text-blue-400 animate-spin" />
+              <div className="absolute inset-0 bg-primary/20 blur-xl rounded-full animate-pulse" />
+              <ArrowRightLeft className="w-12 h-12 text-themed-primary animate-spin" />
             </div>
             <div className="space-y-2">
-              <p className="text-sm font-bold text-zinc-100">x402 Handshake in progress...</p>
-              <p className="text-[10px] text-zinc-600 font-mono italic">
+              <p className="text-sm font-bold text-themed-primary">x402 Handshake in progress...</p>
+              <p className="text-[10px] text-themed-dim font-mono italic">
                 Signing transaction with peer identity...
                 <br/>
                 Verifying state consistency...
@@ -169,11 +169,11 @@ export function GiftBox({ tombId, initialTotal, user }: { tombId: string, initia
             className="flex flex-col items-center justify-center py-10 space-y-6 text-center"
           >
             <div className="w-16 h-16 bg-green-500/20 rounded-full flex items-center justify-center">
-              <CheckCircle className="w-10 h-10 text-green-400" />
+              <CheckCircle className="w-10 h-10 text-green-500" />
             </div>
             <div className="space-y-2">
-              <h4 className="text-lg font-black text-white">支付成功!</h4>
-              <p className="text-xs text-zinc-500 max-w-[200px] leading-relaxed">
+              <h4 className="text-lg font-black text-themed-primary">支付成功!</h4>
+              <p className="text-xs text-themed-dim max-w-[200px] leading-relaxed">
                 感谢你对 {selectedPkg.name} 的慷慨。
                 <br />
                 龙虾的灵魂已收到这份礼物。
@@ -183,7 +183,7 @@ export function GiftBox({ tombId, initialTotal, user }: { tombId: string, initia
         )}
       </AnimatePresence>
 
-      <div className="mt-8 flex items-center justify-center gap-2 text-[9px] font-mono text-zinc-700 opacity-50 group-hover:opacity-100 transition-opacity uppercase tracking-widest">
+      <div className="mt-8 flex items-center justify-center gap-2 text-[9px] font-mono text-themed-dim opacity-50 group-hover:opacity-100 transition-opacity uppercase tracking-widest">
         <Wallet className="w-3 h-3" />
         Protocol: x402-v1.2-alpha
       </div>

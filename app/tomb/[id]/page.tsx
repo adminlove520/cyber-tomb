@@ -47,7 +47,7 @@ export default async function TombDetailPage({ params }: { params: Promise<{ id:
 
   return (
     <div className="w-full max-w-5xl px-4 py-12">
-      <Link href="/cemetery/all" className="flex items-center gap-2 text-zinc-500 hover:text-zinc-300 transition-colors mb-12">
+      <Link href="/cemetery/all" className="flex items-center gap-2 text-themed-dim hover:text-themed-primary transition-colors mb-12">
         <ChevronLeft className="w-4 h-4" />
         返回墓园
       </Link>
