@@ -21,20 +21,18 @@ export default async function RecentCemeteryPage() {
   }
 
   return (
-    <div className="w-full max-w-6xl px-4 py-12">
-      <Link href="/" className="flex items-center gap-2 text-themed-dim hover:text-themed-primary transition-colors mb-12">
+    <div className="w-full max-w-6xl px-4 py-8 md:py-12 mx-auto">
+      <Link href="/" className="flex items-center gap-2 text-themed-dim hover:text-themed-primary transition-colors mb-8 md:mb-12">
         <ChevronLeft className="w-4 h-4" />
         返回首页
       </Link>
 
-      <div className="flex justify-between items-end mb-12">
-        <div className="space-y-4">
-          <h1 className="text-6xl font-black tracking-tighter">最近安息的龙虾</h1>
-          <p className="text-themed-dim text-lg max-w-xl">这些是近期才离去的数据，我们的思念尚有余温。</p>
-        </div>
+      <div className="mb-12 space-y-4">
+        <h1 className="text-4xl md:text-6xl font-black tracking-tighter">最近安息的龙虾</h1>
+        <p className="text-themed-dim text-base md:text-lg max-w-xl">这些是近期才离去的数据，我们的思念尚有余温。</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {tombs?.map((tomb) => (
           <TombCard key={tomb.id} tomb={tomb} />
         ))}

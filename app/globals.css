@@ -5,89 +5,93 @@
 @layer base {
   :root {
     /* DEFAULT (Cyber) */
-    --background: 0 0% 0%;
-    --foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --secondary: 221 39% 11%;
-    --accent: 199 89% 48%;
-    --card-bg: 0 0% 0% / 0.4;
-    --card-border: 217 91% 60% / 0.2;
-    --glow-color: 217 91% 60% / 0.1;
-    --text-dim: 215 20.2% 65.1%;
-    --radius: 2rem;
-  }
-
-  .theme-cyber {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
     --primary: 217.2 91.2% 59.8%;
     --secondary: 217.2 32.6% 17.5%;
     --accent: 199 100% 50%;
-    --card-bg: 240 10% 10% / 0.8;
+    --card-bg: 240 10% 6% / 0.8;
     --card-border: 217.2 91.2% 59.8% / 0.2;
     --glow-color: 199 100% 50% / 0.1;
     --text-dim: 215 20.2% 65.1%;
+    --radius: 1.5rem;
+  }
+
+  .theme-cyber {
+    --background: 240 10% 2%;
+    --foreground: 0 0% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --secondary: 217.2 32.6% 17.5%;
+    --accent: 199 100% 50%;
+    --card-bg: 240 10% 5% / 0.9;
+    --card-border: 217.2 91.2% 59.8% / 0.2;
+    --glow-color: 199 100% 50% / 0.15;
+    --text-dim: 215 20.2% 65.1%;
+    --radius: 1.5rem;
   }
 
   .theme-zen {
-    --background: 60 9.1% 97.8%;
-    --foreground: 20 14.3% 4.1%;
+    --background: 40 15% 96%;
+    --foreground: 24 9.8% 10%;
     --primary: 24 9.8% 10%;
-    --secondary: 60 4.8% 95.9%;
-    --accent: 84 62% 44%;
-    --card-bg: 60 9.1% 90% / 0.5;
-    --card-border: 24 5.4% 63.9% / 0.2;
-    --glow-color: 84 62% 44% / 0.05;
-    --text-dim: 25 5.3% 44.7%;
-    --radius: 4rem;
+    --secondary: 40 10% 90%;
+    --accent: 142 45% 44%;
+    --card-bg: 40 15% 92% / 0.7;
+    --card-border: 24 9.8% 10% / 0.1;
+    --glow-color: 142 45% 44% / 0.05;
+    --text-dim: 25 5.3% 45%;
+    --radius: 2rem;
   }
 
   .theme-classic {
-    --background: 20 60% 8%;
+    --background: 15 50% 6%;
     --foreground: 45 93% 85%;
-    --primary: 38 92% 50%;
-    --secondary: 25 95% 20%;
-    --accent: 48 96% 53%;
-    --card-bg: 25 95% 15% / 0.4;
-    --card-border: 38 92% 50% / 0.3;
-    --glow-color: 48 96% 53% / 0.1;
-    --text-dim: 28 80% 45%;
+    --primary: 38 92% 55%;
+    --secondary: 15 50% 12%;
+    --accent: 48 96% 60%;
+    --card-bg: 15 50% 10% / 0.6;
+    --card-border: 38 92% 55% / 0.3;
+    --glow-color: 48 96% 60% / 0.15;
+    --text-dim: 28 60% 55%;
+    --radius: 1.5rem;
   }
 }
 
 body {
-  @apply transition-colors duration-700;
+  @apply transition-colors duration-700 min-h-screen;
   background-color: hsl(var(--background));
   color: hsl(var(--foreground));
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
 }
 
 /* Custom background effects per theme */
 .theme-cyber {
   background-image: 
-    radial-gradient(circle at 50% 50%, hsla(var(--primary), 0.05) 0%, transparent 80%),
-    linear-gradient(to bottom, transparent 95%, hsla(var(--primary), 0.03) 100%),
-    linear-gradient(to right, transparent 95%, hsla(var(--primary), 0.03) 100%);
-  background-size: 100% 100%, 40px 40px, 40px 40px;
+    radial-gradient(circle at 50% 20%, hsla(var(--primary), 0.1) 0%, transparent 50%),
+    linear-gradient(to bottom, transparent 98%, hsla(var(--primary), 0.05) 100%),
+    linear-gradient(to right, transparent 98%, hsla(var(--primary), 0.05) 100%);
+  background-size: 100% 100%, 30px 30px, 30px 30px;
 }
 
 .theme-zen {
   background-image: 
-    radial-gradient(circle at 10% 10%, hsla(var(--accent), 0.05) 0%, transparent 40%),
-    radial-gradient(circle at 90% 90%, hsla(var(--accent), 0.05) 0%, transparent 40%);
+    radial-gradient(circle at 0% 0%, hsla(var(--accent), 0.08) 0%, transparent 40%),
+    radial-gradient(circle at 100% 100%, hsla(var(--accent), 0.08) 0%, transparent 40%);
 }
 
 .theme-classic {
   background-image: 
-    linear-gradient(to bottom, rgba(0,0,0,0.4), transparent),
-    radial-gradient(ellipse at center, hsla(var(--primary), 0.1) 0%, transparent 70%);
+    linear-gradient(to bottom, rgba(0,0,0,0.6), transparent),
+    radial-gradient(circle at center, hsla(var(--primary), 0.08) 0%, transparent 70%);
 }
 
 .card-themed {
-  @apply transition-all duration-500;
+  @apply transition-all duration-500 backdrop-blur-md;
   background-color: hsla(var(--card-bg));
   border: 1px solid hsla(var(--card-border));
-  box-shadow: 0 0 40px hsla(var(--glow-color));
+  box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5), 0 0 20px hsla(var(--glow-color));
+  border-radius: var(--radius);
 }
 
 .input-themed {

@@ -16,12 +16,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="zh">
+    <html lang="zh" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider>
-          <main className="min-h-screen transition-colors duration-1000">
+          <div className="min-h-screen flex flex-col transition-colors duration-1000">
             {children}
-          </main>
+          </div>
         </ThemeProvider>
       </body>
     </html>

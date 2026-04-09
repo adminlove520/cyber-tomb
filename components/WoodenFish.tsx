@@ -144,11 +144,11 @@ export default function WoodenFish() {
   }, [knock]);
 
   return (
-    <div className="flex flex-col items-center gap-8 select-none relative w-full max-w-xl transition-all duration-1000 p-8 rounded-[4rem] card-themed">
+    <div className="flex flex-col items-center gap-6 md:gap-8 select-none relative w-full max-w-xl transition-all duration-1000 p-6 md:p-8 rounded-[2.5rem] md:rounded-[4rem] card-themed">
       {/* Merit Display */}
       <div className="flex flex-col items-center gap-2">
         <h2 className={cn(
-          "text-5xl font-black italic tracking-tighter transition-all",
+          "text-3xl md:text-5xl font-black italic tracking-tighter transition-all px-4",
           theme === 'cyber' && "text-themed-primary drop-shadow-[0_0_10px_hsla(var(--primary),0.5)]",
           theme === 'zen' && "text-themed-dim font-serif",
           theme === 'classic' && "text-themed-accent"
@@ -156,24 +156,24 @@ export default function WoodenFish() {
           个人功德: {meritCount.toLocaleString()}
         </h2>
         {globalMerits !== null && (
-          <div className="text-sm font-mono text-themed-dim uppercase tracking-widest flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-            全服累计功德: <span className="text-themed-primary">{globalMerits.toLocaleString()}</span>
+          <div className="text-[10px] md:text-sm font-mono text-themed-dim uppercase tracking-widest flex items-center gap-2 px-6">
+            <span className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-green-500 animate-pulse shrink-0" />
+            <span className="truncate">全服累计功德: <span className="text-themed-primary">{globalMerits.toLocaleString()}</span></span>
           </div>
         )}
       </div>
 
-      <div className="relative group cursor-pointer" onClick={knock}>
+      <div className="relative group cursor-pointer touch-none" onClick={knock}>
         <AnimatePresence>
           {events.map((event) => (
             <motion.div
               key={event.id}
               initial={{ opacity: 1, y: 0, scale: 0.5 }}
-              animate={{ opacity: 0, y: -200, scale: 2 }}
+              animate={{ opacity: 0, y: -150, scale: 1.5 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 1.2, ease: "easeOut" }}
               className={cn(
-                "absolute top-0 left-1/2 -translate-x-1/2 text-2xl font-black whitespace-nowrap pointer-events-none drop-shadow-xl z-50",
+                "absolute top-0 left-1/2 -translate-x-1/2 text-lg md:text-2xl font-black whitespace-nowrap pointer-events-none drop-shadow-xl z-50",
                 theme === 'cyber' && "text-themed-accent font-mono",
                 theme === 'zen' && "text-themed-dim font-serif",
                 theme === 'classic' && "text-themed-primary font-bold"
@@ -188,7 +188,7 @@ export default function WoodenFish() {
           animate={isKnocking ? { scale: 0.85, rotate: -5 } : { scale: 1, rotate: 0 }}
           transition={{ type: "spring", stiffness: 600, damping: 10 }}
           className={cn(
-            "w-80 h-80 rounded-[5rem] flex items-center justify-center border-4 transition-all overflow-hidden relative shadow-2xl",
+            "w-64 h-64 md:w-80 md:h-80 rounded-[4rem] md:rounded-[5rem] flex items-center justify-center border-4 transition-all overflow-hidden relative shadow-2xl",
             theme === 'cyber' && "bg-gradient-to-br from-zinc-900 via-black to-zinc-900 border-themed-border shadow-primary/10",
             theme === 'zen' && "bg-stone-200/10 border-stone-400/20 shadow-none",
             theme === 'classic' && "bg-gradient-to-tr from-amber-950 to-amber-900 border-amber-800"
@@ -206,7 +206,7 @@ export default function WoodenFish() {
             src="/images/wooden-fish.svg" 
             alt="Wooden Fish" 
             className={cn(
-              "w-60 h-60 pointer-events-none transition-all group-hover:scale-110",
+              "w-48 h-48 md:w-60 md:h-60 pointer-events-none transition-all group-hover:scale-110",
               theme === 'cyber' && "filter brightness-50 sepia(100%) hue-rotate(180deg) saturate(300%) opacity-70",
               theme === 'zen' && "filter grayscale brightness-75 opacity-60",
               theme === 'classic' && "filter brightness-75 sepia(100%) hue-rotate(0deg) saturate(200%)"
@@ -214,47 +214,47 @@ export default function WoodenFish() {
           />
         </motion.div>
 
-        <div className="absolute -bottom-10 left-1/2 -translate-x-1/2 text-[10px] text-themed-dim font-black uppercase tracking-[0.3em] opacity-0 group-hover:opacity-100 transition-all duration-500">
+        <div className="absolute -bottom-8 md:bottom-[-2.5rem] left-1/2 -translate-x-1/2 text-[10px] text-themed-dim font-black uppercase tracking-[0.2em] md:tracking-[0.3em] opacity-60 md:opacity-0 md:group-hover:opacity-100 transition-all duration-500 whitespace-nowrap">
           点击敲击 · Tap to Vibrate
         </div>
       </div>
 
       {/* Controls */}
-      <div className="flex flex-col items-center gap-4 mt-12 w-full">
-        <div className="flex items-center gap-2 bg-themed-card p-1 rounded-full border border-themed-border backdrop-blur-xl">
+      <div className="flex flex-col items-center gap-4 mt-8 md:mt-12 w-full">
+        <div className="flex flex-wrap justify-center items-center gap-2 bg-themed-card p-1.5 md:p-1 rounded-3xl md:rounded-full border border-themed-border backdrop-blur-xl">
           <button 
             onClick={() => setBgmEnabled(!bgmEnabled)}
             className={cn(
-              "flex items-center gap-2 px-6 py-3 rounded-full transition-all text-xs font-black uppercase tracking-widest",
+              "flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 rounded-full transition-all text-[10px] md:text-xs font-black uppercase tracking-widest",
               bgmEnabled 
                 ? "bg-primary text-background shadow-lg shadow-primary/40" 
                 : "text-themed-dim hover:text-themed-primary"
             )}
           >
-            <Music className={cn("w-4 h-4", bgmEnabled && "animate-spin")} />
-            {bgmEnabled ? "播放中 · 大悲咒" : "伴奏 · 大悲咒"}
+            <Music className={cn("w-3.5 h-3.5 md:w-4 md:h-4", bgmEnabled && "animate-spin")} />
+            <span className="whitespace-nowrap">{bgmEnabled ? "播放中" : "伴奏 · 大悲咒"}</span>
           </button>
           
-          <div className="w-[1px] h-6 bg-themed-border opacity-50"></div>
+          <div className="w-[1px] h-4 md:h-6 bg-themed-border opacity-30"></div>
           
           <button 
             onClick={() => setSoundId(soundId === "1" ? "2" : "1")}
-            className="flex items-center gap-2 px-6 py-3 rounded-full text-themed-dim hover:text-themed-primary transition-all text-xs font-black uppercase tracking-widest"
+            className="flex items-center gap-2 px-4 md:px-6 py-2.5 md:py-3 rounded-full text-themed-dim hover:text-themed-primary transition-all text-[10px] md:text-xs font-black uppercase tracking-widest"
           >
-            <Volume2 className="w-4 h-4" />
-            {soundId === "1" ? "木鱼声" : "钟鸣声"}
+            <Volume2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
+            <span className="whitespace-nowrap">{soundId === "1" ? "木鱼声" : "钟鸣声"}</span>
           </button>
 
-          <div className="w-[1px] h-6 bg-themed-border opacity-50"></div>
+          <div className="hidden md:block w-[1px] h-6 bg-themed-border opacity-30"></div>
 
           <button 
             onClick={() => setShowSettings(!showSettings)}
             className={cn(
-              "p-3 rounded-full transition-all",
+              "p-2.5 md:p-3 rounded-full transition-all",
               showSettings ? "bg-primary/20 text-themed-primary" : "text-themed-dim hover:text-themed-primary"
             )}
           >
-            <Settings2 className="w-4 h-4" />
+            <Settings2 className="w-3.5 h-3.5 md:w-4 md:h-4" />
           </button>
         </div>
 
@@ -263,20 +263,22 @@ export default function WoodenFish() {
           <motion.div 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex items-center gap-3 p-2 bg-themed-card rounded-2xl border border-themed-border backdrop-blur-xl"
+            className="flex flex-wrap justify-center items-center gap-2 p-2 bg-themed-card rounded-[2rem] border border-themed-border backdrop-blur-xl"
           >
-            <Palette className="w-4 h-4 text-themed-dim ml-2" />
+            <div className="flex items-center gap-2 px-2">
+              <Palette className="w-3.5 h-3.5 md:w-4 md:h-4 text-themed-dim" />
+            </div>
             {THEMES.map((t) => (
               <button
                 key={t.id}
                 onClick={() => setTheme(t.id)}
                 className={cn(
-                  "px-4 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
+                  "px-3 md:px-4 py-2 rounded-xl text-[9px] md:text-[10px] font-black uppercase tracking-widest transition-all flex items-center gap-2",
                   theme === t.id ? "bg-primary text-background" : "text-themed-dim hover:text-themed-primary"
                 )}
               >
                 <span>{t.icon}</span>
-                {t.name}
+                <span className="whitespace-nowrap">{t.name}</span>
               </button>
             ))}
           </motion.div>

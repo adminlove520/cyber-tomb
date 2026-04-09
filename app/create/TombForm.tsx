@@ -46,9 +46,9 @@ export function TombForm({ user }: { user: any }) {
   };
 
   return (
-    <form action={createTomb} className="space-y-8 card-themed p-10 rounded-[3rem]">
-      <div className="space-y-2">
-        <label className="text-sm font-bold text-themed-dim uppercase tracking-widest">龙虾名字</label>
+    <form action={createTomb} className="space-y-6 md:space-y-8 card-themed p-6 md:p-10 rounded-[2.5rem] md:rounded-[3rem] w-full max-w-2xl mx-auto">
+      <div className="space-y-2 text-left">
+        <label className="text-xs md:text-sm font-bold text-themed-dim uppercase tracking-widest">龙虾名字</label>
         <input
           name="name"
           required
@@ -59,18 +59,23 @@ export function TombForm({ user }: { user: any }) {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-themed-dim uppercase tracking-widest">性格/类型</label>
-          <select
-            name="personality"
-            className="input-themed appearance-none"
-            onChange={(e) => setFormValues({ ...formValues, personality: e.target.value })}
-          >
-            {PERSONALITIES.map(p => <option key={p} value={p}>{p}</option>)}
-          </select>
+        <div className="space-y-2 text-left">
+          <label className="text-xs md:text-sm font-bold text-themed-dim uppercase tracking-widest">性格/类型</label>
+          <div className="relative">
+            <select
+              name="personality"
+              className="input-themed appearance-none cursor-pointer pr-10"
+              onChange={(e) => setFormValues({ ...formValues, personality: e.target.value })}
+            >
+              {PERSONALITIES.map(p => <option key={p} value={p}>{p}</option>)}
+            </select>
+            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-themed-dim">
+              ▼
+            </div>
+          </div>
         </div>
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-themed-dim uppercase tracking-widest">离去日期</label>
+        <div className="space-y-2 text-left">
+          <label className="text-xs md:text-sm font-bold text-themed-dim uppercase tracking-widest">离去日期</label>
           <input
             name="died_at"
             type="date"
@@ -80,8 +85,8 @@ export function TombForm({ user }: { user: any }) {
         </div>
       </div>
 
-      <div className="space-y-2">
-        <label className="text-sm font-bold text-themed-dim uppercase tracking-widest">具体死因</label>
+      <div className="space-y-2 text-left">
+        <label className="text-xs md:text-sm font-bold text-themed-dim uppercase tracking-widest">具体死因</label>
         <textarea
           name="cause"
           required
@@ -92,16 +97,16 @@ export function TombForm({ user }: { user: any }) {
         />
       </div>
 
-      <div className="space-y-2">
+      <div className="space-y-2 text-left">
         <div className="flex justify-between items-center mb-1">
-          <label className="text-sm font-bold text-themed-dim uppercase tracking-widest">墓志铭</label>
+          <label className="text-xs md:text-sm font-bold text-themed-dim uppercase tracking-widest">墓志铭</label>
           <button
             type="button"
             onClick={generateEpitaph}
             disabled={generating}
-            className="flex items-center gap-1.5 text-xs text-themed-accent hover:brightness-125 transition-all disabled:opacity-50"
+            className="flex items-center gap-1.5 text-[10px] md:text-xs text-themed-accent hover:brightness-125 transition-all disabled:opacity-50"
           >
-            {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
+            {generating ? <Loader2 className="w-3.5 h-3.5 md:w-4 md:h-4 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 md:w-4 md:h-4" />}
             AI 辅助撰写
           </button>
         </div>
@@ -120,7 +125,7 @@ export function TombForm({ user }: { user: any }) {
         type="submit"
         disabled={loading}
         onClick={() => setLoading(true)}
-        className="w-full btn-primary-themed"
+        className="w-full btn-primary-themed py-4 md:py-5 text-sm md:text-base mt-4"
       >
         {loading && <Loader2 className="w-5 h-5 animate-spin" />}
         立下墓碑 (Confirm Burial)

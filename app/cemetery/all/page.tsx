@@ -21,26 +21,26 @@ export default async function AllCemeteryPage() {
   }
 
   return (
-    <div className="w-full max-w-6xl px-4 py-12">
-      <Link href="/" className="flex items-center gap-2 text-themed-dim hover:text-themed-primary transition-colors mb-12">
+    <div className="w-full max-w-6xl px-4 py-8 md:py-12 mx-auto">
+      <Link href="/" className="flex items-center gap-2 text-themed-dim hover:text-themed-primary transition-colors mb-8 md:mb-12">
         <ChevronLeft className="w-4 h-4" />
         返回首页
       </Link>
 
-      <div className="flex justify-between items-end mb-12">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-6 mb-12">
         <div className="space-y-4">
-          <h1 className="text-6xl font-black tracking-tighter">赛博公墓</h1>
-          <p className="text-themed-dim text-lg max-w-xl">这里安息着无数因 Bug、性能瓶颈、人为失误、或被技术浪潮淘汰的代码逻辑。</p>
+          <h1 className="text-4xl md:text-6xl font-black tracking-tighter">赛博公墓</h1>
+          <p className="text-themed-dim text-base md:text-lg max-w-xl">这里安息着无数因 Bug、性能瓶颈、人为失误、或被技术浪潮淘汰的代码逻辑。</p>
         </div>
         <Link 
           href="/create" 
-          className="btn-primary-themed"
+          className="btn-primary-themed w-full md:w-auto"
         >
           为它们立碑
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
         {tombs?.map((tomb) => (
           <TombCard key={tomb.id} tomb={tomb} />
         ))}
