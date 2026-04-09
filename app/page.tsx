@@ -1,26 +1,88 @@
+"use client";
+
 import WoodenFish from "@/components/WoodenFish";
 import Link from "next/link";
-import { Ghost, Skull, Plus, Terminal } from "lucide-react";
+import { Ghost, Skull, Plus, Terminal, Leaf, Scroll } from "lucide-react";
+import { useTheme } from "@/components/ThemeContext";
+import { cn } from "@/lib/utils";
+import { motion } from "framer-motion";
 
 export default function Home() {
+  const { theme } = useTheme();
+
+  const getThemeContent = () => {
+    switch(theme) {
+      case 'zen':
+        return {
+          title: "禅意墓场",
+          sub: "尘归尘，土归土，代码终入极乐园。",
+          icon: <Leaf className="w-3 h-3 text-green-500" />,
+          bgText: "ZEN"
+        };
+      case 'classic':
+        return {
+          title: "重厚墓场",
+          sub: "昔者已逝，其志长存。载于卷轴，传于万世。",
+          icon: <Scroll className="w-3 h-3 text-amber-500" />,
+          bgText: "PAST"
+        };
+      default:
+        return {
+          title: "赛博墓场",
+          sub: "Here lies a lobster. They lived, they coded, they were deleted.",
+          icon: <Terminal className="w-3 h-3 text-blue-500" />,
+          bgText: "CYBER"
+        };
+    }
+  };
+
+  const content = getThemeContent();
+
   return (
-    <div className="flex flex-col items-center gap-16 w-full max-w-5xl text-center py-24">
+    <div className="flex flex-col items-center gap-16 w-full max-w-5xl text-center py-24 px-4 overflow-hidden">
       <div className="space-y-6 relative">
         {/* Decorative Background Text */}
-        <div className="absolute -top-20 -left-20 text-[120px] font-black text-zinc-900/40 select-none pointer-events-none -z-10 rotate-12">
-          CYBER
-        </div>
-        <div className="absolute -bottom-20 -right-20 text-[120px] font-black text-zinc-900/40 select-none pointer-events-none -z-10 -rotate-6">
+        <motion.div 
+          key={`bg-1-${theme}`}
+          initial={{ opacity: 0, x: -100 }}
+          animate={{ opacity: 0.1, x: 0 }}
+          className="absolute -top-20 -left-20 text-[150px] font-black select-none pointer-events-none -z-10 rotate-12 hidden md:block"
+          style={{ color: 'hsl(var(--primary))' }}
+        >
+          {content.bgText}
+        </motion.div>
+        <motion.div 
+          key={`bg-2-${theme}`}
+          initial={{ opacity: 0, x: 100 }}
+          animate={{ opacity: 0.1, x: 0 }}
+          className="absolute -bottom-20 -right-20 text-[150px] font-black select-none pointer-events-none -z-10 -rotate-6 hidden md:block"
+          style={{ color: 'hsl(var(--accent))' }}
+        >
           TOMB
-        </div>
+        </motion.div>
 
-        <h1 className="text-8xl font-black tracking-tighter text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-white to-blue-600 drop-shadow-2xl">
-          赛博墓场
-        </h1>
-        <div className="flex items-center justify-center gap-4 text-zinc-500 font-black uppercase tracking-[0.5em] text-xs">
-          <Terminal className="w-3 h-3" />
-          Here lies a lobster. They lived, they coded, they were deleted.
-        </div>
+        <motion.h1 
+          key={theme}
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className={cn(
+            "text-8xl font-black tracking-tighter drop-shadow-2xl transition-all duration-700",
+            theme === 'cyber' && "text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-white to-blue-600",
+            theme === 'zen' && "text-stone-700 font-serif",
+            theme === 'classic' && "text-amber-500 font-bold"
+          )}
+        >
+          {content.title}
+        </motion.h1>
+        <motion.div 
+          key={`sub-${theme}`}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex items-center justify-center gap-4 text-themed-dim font-black uppercase tracking-[0.5em] text-xs"
+        >
+          {content.icon}
+          {content.sub}
+        </motion.div>
       </div>
 
       <WoodenFish />
@@ -28,39 +90,39 @@ export default function Home() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full px-4">
         <Link 
           href="/cemetery/all" 
-          className="group flex flex-col items-center p-10 rounded-[3rem] bg-zinc-950 hover:bg-zinc-900 border border-zinc-900 transition-all hover:scale-105 active:scale-95"
+          className="group flex flex-col items-center p-10 rounded-[3rem] card-themed hover:bg-zinc-900/10 transition-all hover:scale-105 active:scale-95"
         >
           <div className="p-4 rounded-3xl bg-blue-500/10 mb-6 group-hover:bg-blue-500/20 transition-all">
-            <Skull className="w-10 h-10 text-zinc-400 group-hover:text-blue-400" />
+            <Skull className="w-10 h-10 text-themed-dim group-hover:text-blue-400" />
           </div>
           <h3 className="text-2xl font-black uppercase italic tracking-tighter">全部墓碑</h3>
-          <p className="text-[10px] text-zinc-600 mt-2 font-mono tracking-widest uppercase italic font-bold">Inspect all souls</p>
+          <p className="text-[10px] text-themed-dim mt-2 font-mono tracking-widest uppercase italic font-bold">Inspect all souls</p>
         </Link>
         <Link 
           href="/create" 
-          className="group flex flex-col items-center p-10 rounded-[3rem] bg-zinc-950 hover:bg-zinc-900 border border-zinc-900 transition-all hover:scale-105 active:scale-95 shadow-xl shadow-blue-500/5"
+          className="group flex flex-col items-center p-10 rounded-[3rem] card-themed hover:bg-zinc-900/10 transition-all hover:scale-105 active:scale-95 shadow-xl"
         >
           <div className="p-4 rounded-3xl bg-green-500/10 mb-6 group-hover:bg-green-500/20 transition-all">
-            <Plus className="w-10 h-10 text-zinc-400 group-hover:text-green-400" />
+            <Plus className="w-10 h-10 text-themed-dim group-hover:text-green-400" />
           </div>
           <h3 className="text-2xl font-black uppercase italic tracking-tighter">立碑</h3>
-          <p className="text-[10px] text-zinc-600 mt-2 font-mono tracking-widest uppercase italic font-bold">New Burial Entry</p>
+          <p className="text-[10px] text-themed-dim mt-2 font-mono tracking-widest uppercase italic font-bold">New Burial Entry</p>
         </Link>
         <Link 
           href="/cemetery/recent" 
-          className="group flex flex-col items-center p-10 rounded-[3rem] bg-zinc-950 hover:bg-zinc-900 border border-zinc-800 transition-all hover:scale-105 active:scale-95"
+          className="group flex flex-col items-center p-10 rounded-[3rem] card-themed hover:bg-zinc-900/10 transition-all hover:scale-105 active:scale-95"
         >
           <div className="p-4 rounded-3xl bg-purple-500/10 mb-6 group-hover:bg-purple-500/20 transition-all">
-            <Ghost className="w-10 h-10 text-zinc-400 group-hover:text-purple-400" />
+            <Ghost className="w-10 h-10 text-themed-dim group-hover:text-purple-400" />
           </div>
           <h3 className="text-2xl font-black uppercase italic tracking-tighter">最近新增</h3>
-          <p className="text-[10px] text-zinc-600 mt-2 font-mono tracking-widest uppercase italic font-bold">Recently Deceased</p>
+          <p className="text-[10px] text-themed-dim mt-2 font-mono tracking-widest uppercase italic font-bold">Recently Deceased</p>
         </Link>
       </div>
 
       <div className="mt-20 flex flex-col items-center gap-2">
-         <p className="text-[10px] font-black text-zinc-700 uppercase tracking-widest">Powered by Lobster-AI-Engine</p>
-         <div className="w-12 h-1 bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>
+         <p className="text-[10px] font-black text-themed-dim uppercase tracking-widest">Powered by Lobster-AI-Engine</p>
+         <div className="w-12 h-1 bg-gradient-to-r from-transparent via-primary/20 to-transparent"></div>
       </div>
     </div>
   );

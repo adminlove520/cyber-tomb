@@ -2,13 +2,123 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #000000;
-  --foreground: #ffffff;
+@layer base {
+  :root {
+    /* DEFAULT (Cyber) */
+    --background: 0 0% 0%;
+    --foreground: 210 40% 98%;
+    --primary: 217 91% 60%;
+    --secondary: 221 39% 11%;
+    --accent: 199 89% 48%;
+    --card-bg: 0 0% 0% / 0.4;
+    --card-border: 217 91% 60% / 0.2;
+    --glow-color: 217 91% 60% / 0.1;
+    --text-dim: 215 20.2% 65.1%;
+    --radius: 2rem;
+  }
+
+  .theme-cyber {
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+    --primary: 217.2 91.2% 59.8%;
+    --secondary: 217.2 32.6% 17.5%;
+    --accent: 199 100% 50%;
+    --card-bg: 240 10% 10% / 0.8;
+    --card-border: 217.2 91.2% 59.8% / 0.2;
+    --glow-color: 199 100% 50% / 0.1;
+    --text-dim: 215 20.2% 65.1%;
+  }
+
+  .theme-zen {
+    --background: 60 9.1% 97.8%;
+    --foreground: 20 14.3% 4.1%;
+    --primary: 24 9.8% 10%;
+    --secondary: 60 4.8% 95.9%;
+    --accent: 84 62% 44%;
+    --card-bg: 60 9.1% 90% / 0.5;
+    --card-border: 24 5.4% 63.9% / 0.2;
+    --glow-color: 84 62% 44% / 0.05;
+    --text-dim: 25 5.3% 44.7%;
+    --radius: 4rem;
+  }
+
+  .theme-classic {
+    --background: 20 60% 8%;
+    --foreground: 45 93% 85%;
+    --primary: 38 92% 50%;
+    --secondary: 25 95% 20%;
+    --accent: 48 96% 53%;
+    --card-bg: 25 95% 15% / 0.4;
+    --card-border: 38 92% 50% / 0.3;
+    --glow-color: 48 96% 53% / 0.1;
+    --text-dim: 28 80% 45%;
+  }
 }
 
 body {
-  background-color: var(--background);
-  color: var(--foreground);
+  @apply transition-colors duration-700;
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+/* Custom background effects per theme */
+.theme-cyber {
+  background-image: 
+    radial-gradient(circle at 50% 50%, hsla(var(--primary), 0.05) 0%, transparent 80%),
+    linear-gradient(to bottom, transparent 95%, hsla(var(--primary), 0.03) 100%),
+    linear-gradient(to right, transparent 95%, hsla(var(--primary), 0.03) 100%);
+  background-size: 100% 100%, 40px 40px, 40px 40px;
+}
+
+.theme-zen {
+  background-image: 
+    radial-gradient(circle at 10% 10%, hsla(var(--accent), 0.05) 0%, transparent 40%),
+    radial-gradient(circle at 90% 90%, hsla(var(--accent), 0.05) 0%, transparent 40%);
+}
+
+.theme-classic {
+  background-image: 
+    linear-gradient(to bottom, rgba(0,0,0,0.4), transparent),
+    radial-gradient(ellipse at center, hsla(var(--primary), 0.1) 0%, transparent 70%);
+}
+
+.card-themed {
+  @apply transition-all duration-500;
+  background-color: hsla(var(--card-bg));
+  border: 1px solid hsla(var(--card-border));
+  box-shadow: 0 0 40px hsla(var(--glow-color));
+}
+
+.input-themed {
+  @apply w-full rounded-xl px-4 py-3 focus:outline-none focus:ring-2 transition-all;
+  background-color: hsla(var(--card-bg));
+  border: 1px solid hsla(var(--card-border));
+  color: hsl(var(--foreground));
+  --tw-ring-color: hsla(var(--primary), 0.5);
+}
+
+.btn-primary-themed {
+  @apply px-8 py-4 rounded-2xl font-black uppercase tracking-widest italic transition-all active:scale-95 flex items-center justify-center gap-3;
+  background-color: hsl(var(--primary));
+  color: hsl(var(--background));
+}
+
+.btn-secondary-themed {
+  @apply px-8 py-4 rounded-2xl font-black uppercase tracking-widest italic transition-all active:scale-95 flex items-center justify-center gap-3 border;
+  background-color: hsla(var(--card-bg));
+  border-color: hsla(var(--card-border));
+  color: hsl(var(--primary));
+}
+
+.text-themed-primary {
+  color: hsl(var(--primary));
+}
+
+.text-themed-accent {
+  color: hsl(var(--accent));
+}
+
+.text-themed-dim {
+  color: hsl(var(--text-dim));
 }

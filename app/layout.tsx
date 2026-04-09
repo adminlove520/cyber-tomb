@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
+import { ThemeProvider } from "@/components/ThemeContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,9 +18,11 @@ export default function RootLayout({
   return (
     <html lang="zh">
       <body className={inter.className}>
-        <main className="min-h-screen flex flex-col items-center justify-between p-24">
-          {children}
-        </main>
+        <ThemeProvider>
+          <main className="min-h-screen transition-colors duration-1000">
+            {children}
+          </main>
+        </ThemeProvider>
       </body>
     </html>
   );

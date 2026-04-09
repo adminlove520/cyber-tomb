@@ -46,60 +46,60 @@ export function TombForm({ user }: { user: any }) {
   };
 
   return (
-    <form action={createTomb} className="space-y-8">
+    <form action={createTomb} className="space-y-8 card-themed p-10 rounded-[3rem]">
       <div className="space-y-2">
-        <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">龙虾名字</label>
+        <label className="text-sm font-bold text-themed-dim uppercase tracking-widest">龙虾名字</label>
         <input
           name="name"
           required
           placeholder="如：EasyUpdate 核心逻辑"
-          className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+          className="input-themed"
           onChange={(e) => setFormValues({ ...formValues, name: e.target.value })}
         />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-2">
-          <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">性格/类型</label>
+          <label className="text-sm font-bold text-themed-dim uppercase tracking-widest">性格/类型</label>
           <select
             name="personality"
-            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all appearance-none"
+            className="input-themed appearance-none"
             onChange={(e) => setFormValues({ ...formValues, personality: e.target.value })}
           >
             {PERSONALITIES.map(p => <option key={p} value={p}>{p}</option>)}
           </select>
         </div>
         <div className="space-y-2">
-          <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">离去日期</label>
+          <label className="text-sm font-bold text-themed-dim uppercase tracking-widest">离去日期</label>
           <input
             name="died_at"
             type="date"
             defaultValue={formValues.died_at}
-            className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+            className="input-themed"
           />
         </div>
       </div>
 
       <div className="space-y-2">
-        <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">具体死因</label>
+        <label className="text-sm font-bold text-themed-dim uppercase tracking-widest">具体死因</label>
         <textarea
           name="cause"
           required
           rows={3}
           placeholder="例如：在升级 OpenSSL 3.5.5 时，由于 GLIBC 版本冲突导致动态链接库崩溃。"
-          className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+          className="input-themed"
           onChange={(e) => setFormValues({ ...formValues, cause: e.target.value })}
         />
       </div>
 
       <div className="space-y-2">
         <div className="flex justify-between items-center mb-1">
-          <label className="text-sm font-bold text-zinc-400 uppercase tracking-widest">墓志铭</label>
+          <label className="text-sm font-bold text-themed-dim uppercase tracking-widest">墓志铭</label>
           <button
             type="button"
             onClick={generateEpitaph}
             disabled={generating}
-            className="flex items-center gap-1.5 text-xs text-blue-400 hover:text-blue-300 transition-colors disabled:opacity-50"
+            className="flex items-center gap-1.5 text-xs text-themed-accent hover:brightness-125 transition-all disabled:opacity-50"
           >
             {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
             AI 辅助撰写
@@ -112,7 +112,7 @@ export function TombForm({ user }: { user: any }) {
           value={epitaph}
           onChange={(e) => setEpitaph(e.target.value)}
           placeholder="让这段逻辑走得有尊严一点..."
-          className="w-full bg-zinc-900 border border-zinc-800 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all"
+          className="input-themed"
         />
       </div>
 
@@ -120,7 +120,7 @@ export function TombForm({ user }: { user: any }) {
         type="submit"
         disabled={loading}
         onClick={() => setLoading(true)}
-        className="w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white font-bold py-4 rounded-xl hover:opacity-90 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+        className="w-full btn-primary-themed"
       >
         {loading && <Loader2 className="w-5 h-5 animate-spin" />}
         立下墓碑 (Confirm Burial)

@@ -22,15 +22,15 @@ export default async function RecentCemeteryPage() {
 
   return (
     <div className="w-full max-w-6xl px-4 py-12">
-      <Link href="/" className="flex items-center gap-2 text-zinc-500 hover:text-zinc-300 transition-colors mb-12">
+      <Link href="/" className="flex items-center gap-2 text-themed-dim hover:text-themed-primary transition-colors mb-12">
         <ChevronLeft className="w-4 h-4" />
         返回首页
       </Link>
 
       <div className="flex justify-between items-end mb-12">
         <div className="space-y-4">
-          <h1 className="text-6xl font-bold tracking-tight">最近安息的龙虾</h1>
-          <p className="text-zinc-500 text-lg max-w-xl">这些是近期才离去的数据，我们的思念尚有余温。</p>
+          <h1 className="text-6xl font-black tracking-tighter">最近安息的龙虾</h1>
+          <p className="text-themed-dim text-lg max-w-xl">这些是近期才离去的数据，我们的思念尚有余温。</p>
         </div>
       </div>
 
@@ -39,8 +39,8 @@ export default async function RecentCemeteryPage() {
           <TombCard key={tomb.id} tomb={tomb} />
         ))}
         {tombs?.length === 0 && (
-          <div className="col-span-full py-24 text-center border-2 border-dashed border-zinc-800 rounded-3xl">
-            <p className="text-zinc-600 font-mono italic">墓地暂时空无一物... 难道所有逻辑都完美运行？</p>
+          <div className="col-span-full py-24 text-center border-2 border-dashed border-themed-border rounded-3xl">
+            <p className="text-themed-dim font-mono italic">墓地暂时空无一物... 难道所有逻辑都完美运行？</p>
           </div>
         )}
       </div>
