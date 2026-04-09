@@ -21,7 +21,7 @@ export function IncenseVase({ tombId, initialCount, user }: { tombId: string, in
     // Add smoke particle
     const pid = Date.now();
     setActiveParticles(prev => [...prev, pid]);
-    setTimeout(() => setActiveParticles(prev => prev.filter(p => p !== pid)), 4000);
+    setTimeout(() => setActiveParticles(prev => prev.filter((p: number) => p !== pid)), 4000);
 
     try {
       await addIncenseAction(tombId, {
@@ -54,7 +54,7 @@ export function IncenseVase({ tombId, initialCount, user }: { tombId: string, in
 
       <div className="relative h-48 flex flex-col items-center justify-end group cursor-pointer" onClick={addIncense}>
         <AnimatePresence mode="popLayout">
-          {activeParticles.map(pid => (
+          {activeParticles.map((pid: number) => (
             <motion.div
               key={pid}
               initial={{ opacity: 0, y: 0, x: 0, scale: 0.5, filter: "blur(5px)" }}
@@ -71,7 +71,7 @@ export function IncenseVase({ tombId, initialCount, user }: { tombId: string, in
           
           <div className="flex gap-2 items-end h-full pb-2">
              {/* Render incense sticks */}
-             {[...Array(Math.min(count, 7))].map((_, i) => (
+             {[...Array(Math.min(count, 7))].map((_: any, i: number) => (
                <motion.div 
                  key={i}
                  initial={{ height: 0, opacity: 0 }}

@@ -101,7 +101,7 @@ export default async function TombDetailPage({ params }: { params: Promise<{ id:
           <div className="space-y-6">
             <h2 className="text-2xl font-bold border-l-4 border-yellow-500 pl-4">留言与祭奠</h2>
             <div className="space-y-4">
-              {incenseLogs?.map((log) => (
+              {incenseLogs?.map((log: any) => (
                 <div key={log.id} className="bg-zinc-900/50 p-6 rounded-2xl border border-zinc-800/50">
                   <div className="flex justify-between items-start mb-2">
                     <span className="font-bold text-zinc-300">@{log.visitor_gh_user || "匿名访客"}</span>

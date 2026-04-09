@@ -77,7 +77,7 @@ export function GiftBox({ tombId, initialTotal, user }: { tombId: string, initia
             exit={{ opacity: 0, scale: 0.95 }}
             className="grid grid-cols-2 gap-3"
           >
-            {GIFT_PACKAGES.map((pkg) => (
+            {GIFT_PACKAGES.map((pkg: any) => (
               <button
                 key={pkg.id}
                 onClick={() => startPayment(pkg)}
