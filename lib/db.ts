@@ -3,7 +3,9 @@ import { createClient as createLibsqlClient } from '@libsql/client';
 
 const DATABASE_TYPE = (
   process.env.DATABASE_TYPE === 'supabase' || 
-  (process.env.VERCEL && process.env.NEXT_PUBLIC_SUPABASE_URL && !process.env.NEXT_PUBLIC_SUPABASE_URL.includes('placeholder'))
+  (process.env.NEXT_PUBLIC_SUPABASE_URL && 
+   process.env.NEXT_PUBLIC_SUPABASE_URL !== 'https://placeholder.supabase.co' &&
+   process.env.NEXT_PUBLIC_SUPABASE_URL.trim() !== '')
 ) ? 'supabase' : 'sqlite';
 
 // Supabase Configuration
