@@ -6,8 +6,32 @@ import { IncenseVase } from "./IncenseVase";
 import { GiftBox } from "./GiftBox";
 import { TwitterShare } from "./TwitterShare";
 import { notFound } from "next/navigation";
+import { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
+
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const tomb = await dataService.getTombById(id).catch(() => null);
+
+  if (!tomb) return { title: "赛博墓场 · Cyber Tomb" };
+
+  return {
+    title: `${tomb.lobster_name} · 赛博墓场`,
+    description: `原因：${tomb.cause_of_death} | 墓志铭：${tomb.epitaph}`,
+    openGraph: {
+      title: `${tomb.lobster_name} 的电子墓碑`,
+      description: `龙虾 ${tomb.lobster_name} 已于 ${tomb.died_at} 入土为安。`,
+      images: [tomb.avatar_url || "/images/wooden-fish.svg"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: `${tomb.lobster_name} · 赛博墓场`,
+      description: tomb.epitaph,
+      images: [tomb.avatar_url || "/images/wooden-fish.svg"],
+    },
+  };
+}
 
 export default async function TombDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
