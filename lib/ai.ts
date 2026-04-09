@@ -110,8 +110,8 @@ export async function getDynamicMeritTexts() {
   try {
     const result = await generateWithMiniMax(prompt, "你是一个精通 64 种编程语言且热爱玄学编程的赛博摆渡人。");
     const aiTexts = result.split('\n')
-      .map(t => t.replace(/^\d+[\.、\s]*/, '').trim())
-      .filter(t => t.length > 0 && t.length < 20);
+      .map((t: string) => t.replace(/^\d+[\.、\s]*/, '').trim())
+      .filter((t: string) => t.length > 0 && t.length < 20);
     
     return aiTexts.length > 10 ? aiTexts : [...aiTexts, ...defaults];
   } catch (e) {
