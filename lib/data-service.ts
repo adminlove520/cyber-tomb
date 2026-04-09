@@ -18,7 +18,7 @@ export const dataService = {
         args: [limit, offset],
       });
       const count = rs.rows[0] ? Number(rs.rows[0].full_count) : 0;
-      const data = rs.rows.map(row => ({
+      const data = rs.rows.map((row: any) => ({
         ...row,
         personality_tags: row.personality_tags ? JSON.parse(row.personality_tags as string) : [],
         gift_total: Number(row.gift_total),
